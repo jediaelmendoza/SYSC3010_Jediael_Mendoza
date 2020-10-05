@@ -2,7 +2,7 @@ import sqlite3
 
 connect = sqlite3.connect('sensors.db')
 connect.row_factory = sqlite3.Row
-cursor = connect.cursor();
+cursor = connect.cursor()
 
 #Create Table
 cursor.execute("CREATE TABLE IF NOT EXISTS sensor(sensorID INTEGER, type TEXT, zone TEXT)")
@@ -17,11 +17,21 @@ connect.commit();
 
 #Print
 cursor.execute("SELECT * FROM sensor");
-
+print("\nSensors")
 for row in cursor:
     print(row['sensorID'],row['type'], row['zone']);
-    
-#Reset the table just for aesthetics and testing so that data won't repeat 
-cursor.execute("DROP TABLE sensor")
+print("\nSensors in kitchen")
+#Print sensors in kitchen
+cursor.execute("SELECT * FROM sensor WHERE zone = 'kitchen'")
+for row in cursor:
+    print(row['sensorID'],row['type'], row['zone']);
+#Print Door sensors
+print("\nDoor sensors")
+cursor.execute("SELECT * FROM sensor WHERE type = 'door'") 
+for row in cursor:
+        print(row['sensorID'],row['type'], row['zone']);
+print("\n")
 
+#Drop table for testing and aesthetics, items don't repeat every execution
+cursor.execute("DROP TABLE sensor")
 connect.close();
